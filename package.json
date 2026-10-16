@@ -1,0 +1,19 @@
+{
+  "name": "nexus-market-discord-bot",
+  "version": "1.0.0",
+  "description": "NEXUS MARKET bilingual Discord store bot",
+  "main": "src/index.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "deploy-commands": "node src/deploy-commands.js",
+    "check": "node --check src/index.js && node --check src/commands.js && node --check src/storage.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.19.3",
+    "dotenv": "^16.4.7"
+  }
+}
