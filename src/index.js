@@ -6,6 +6,9 @@ const {
 const config = require("./config");
 const db = require("./storage");
 
+// This bot is authorized to operate in one Discord server only.
+const ALLOWED_GUILD_ID = "1544908713431932979";
+
 if (!process.env.DISCORD_TOKEN) {
   console.error("Missing DISCORD_TOKEN environment variable.");
   process.exit(1);
@@ -264,6 +267,10 @@ async function command(i) {
 
 client.on("interactionCreate", async i => {
   try {
+    if (i.guildId && i.guildId !== ALLOWED_GUILD_ID) {
+      if (i.isRepliable()) await privateReply(i, "Este bot solo está disponible en su servidor autorizado.");
+      return;
+    }
     if (i.isChatInputCommand()) return i.guild ? await command(i) : privateReply(i, "Usa este comando en un servidor.");
     if (i.isButton() && i.guild) {
       if (i.customId.startsWith("ticket:open:")) return openTicket(i, i.customId.split(":")[2]);
@@ -314,6 +321,7 @@ client.on("interactionCreate", async i => {
 
 client.on("messageCreate", async message => {
   try {
+    if (message.guild && message.guild.id !== ALLOWED_GUILD_ID) return;
     if (!message.guild || message.author.bot || !message.content.startsWith(config.prefix)) return;
     const tokens = message.content.slice(config.prefix.length).trim().split(/\s+/);
     const name = (tokens.shift() || "").toLowerCase(), args = tokens;
@@ -356,6 +364,7 @@ client.on("messageCreate", async message => {
 
 client.on("guildMemberAdd", async member => {
   try {
+    if (member.guild.id !== ALLOWED_GUILD_ID) return;
     const cfg = db.guildConfig(member.guild.id);
     const id = cfg.welcomeChannelId || config.channels.welcome;
     const channel = id && await member.guild.channels.fetch(id).catch(() => null);
@@ -368,9 +377,22 @@ client.on("guildMemberAdd", async member => {
     await logs(member.guild, "Nuevo miembro / Member joined", member.user.tag, colors.success);
   } catch (e) { console.warn("[welcome]", e.message); }
 });
-client.on("guildMemberRemove", member => logs(member.guild, "Miembro salió / Member left", member.user.tag, colors.warning));
-client.once("ready", () => {
-  console.log("NEXUS MARKET online as " + client.user.tag + " on " + client.guilds.cache.size + " server(s).");
+client.on("guildMemberRemove", member => { if (member.guild.id === ALLOWED_GUILD_ID) return logs(member.guild, "Miembro salió / Member left", member.user.tag, colors.warning); });
+client.on("guildCreate", async guild => {
+  if (guild.id === ALLOWED_GUILD_ID) return;
+  console.warn("[guild-guard] Leaving unauthorized server:", guild.id);
+  try { await guild.leave(); }
+  catch (e) { console.error("[guild-guard] Could not leave unauthorized server:", e.message); }
+});
+
+client.once("ready", async () => {
+  for (const guild of client.guilds.cache.values()) {
+    if (guild.id !== ALLOWED_GUILD_ID) {
+      console.warn("[guild-guard] Leaving unauthorized server:", guild.id);
+      await guild.leave().catch(e => console.error("[guild-guard] Could not leave server:", e.message));
+    }
+  }
+  console.log("NEXUS MARKET online as " + client.user.tag + " for authorized server " + ALLOWED_GUILD_ID + ".");
   client.user.setPresence({ activities: [{ name: "NEXUS MARKET • /help", type: 3 }], status: "online" });
 });
 client.on("error", e => console.error("[discord.js]", e));
