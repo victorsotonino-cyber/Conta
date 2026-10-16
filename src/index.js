@@ -24,7 +24,7 @@ function embed(title, description, color = colors.main) {
     .setTimestamp().setFooter({ text: "NEXUS MARKET • Discord Store" });
 }
 function emojiData(value) {
-  const m = String(value || "").match(/^<a?:([^:>]+):(\\d+)>$/);
+  const m = String(value || "").match(/^<a?:([^:>]+):(\d+)>$/);
   return m ? { name: m[1], id: m[2], animated: String(value).startsWith("<a:") } : null;
 }
 function button(label, id, style, icon) {
@@ -53,9 +53,7 @@ async function panel(interaction, targetId, payload, missing) {
   if (!target || !target.isTextBased() || !target.send) return privateReply(interaction, missing);
   try { await target.send(payload(true)); }
   catch (e) {
-    const fallback = payload(false);
-    if (fallback.components) for (const row of fallback.components) for (const component of row.components) component.setEmoji(null);
-    await target.send(fallback);
+    await target.send(payload(false));
   }
   return privateReply(interaction, t(interaction.guildId, "Panel publicado en " + target.toString(), "Panel posted in " + target.toString()));
 }
@@ -73,7 +71,7 @@ async function openTicket(i, category) {
     return r && r.ownerId === i.user.id && r.guildId === guild.id && r.status === "open";
   }).length;
   if (openCount >= config.limits.openTicketsPerUser) return privateReply(i, t(guild.id, "Solo puedes tener 2 tickets abiertos a la vez.", "You can have only 2 open tickets at a time."));
-  const slug = i.user.username.toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g, "").replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "usuario";
+  const slug = i.user.username.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "usuario";
   const categoryName = { support: t(guild.id, "soporte", "support"), purchase: t(guild.id, "compra", "purchase"), other: t(guild.id, "otros", "other") }[category] || "ticket";
   const overwrites = [
     { id: guild.roles.everyone.id, deny: [PermissionsBitField.Flags.ViewChannel] },
@@ -310,7 +308,7 @@ client.on("interactionCreate", async i => {
 client.on("messageCreate", async message => {
   try {
     if (!message.guild || message.author.bot || !message.content.startsWith(config.prefix)) return;
-    const tokens = message.content.slice(config.prefix.length).trim().split(/\\s+/);
+    const tokens = message.content.slice(config.prefix.length).trim().split(/\s+/);
     const name = (tokens.shift() || "").toLowerCase(), args = tokens;
     if (name === "ping") return message.reply({ content: "Pong! " + Math.round(client.ws.ping) + " ms", allowedMentions: { repliedUser: false } });
     if (name === "help") return message.reply({ content: "NEXUS MARKET: /help, /ping, /avatar, /userinfo, /serverinfo, /stats, /ban, /kick, /timeout, /clear, /ticket-panel, /verify-panel, /application-panel, /custom-command. Prefijo: !ping, !help, !say.", allowedMentions: { repliedUser: false } });
