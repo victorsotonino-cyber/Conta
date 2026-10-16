@@ -103,7 +103,14 @@ async function openTicket(i, category) {
   try {
     await channel.send({ content: i.user.toString() + staff, embeds: [ticketEmbed], components: [closeRow],
       allowedMentions: { users: [i.user.id], roles: config.roles.staff ? [config.roles.staff] : [] } });
-  } catch (e) { console.warn("[tickets] Initial message failed:", e.message); }
+  } catch (e) {
+    console.warn("[tickets] Initial message with custom emoji failed:", e.message);
+    const plainClose = new ActionRowBuilder().addComponents(button("Cerrar ticket / Close ticket", "ticket:close", ButtonStyle.Danger));
+    await channel.send({
+      content: i.user.toString() + staff, embeds: [ticketEmbed], components: [plainClose],
+      allowedMentions: { users: [i.user.id], roles: config.roles.staff ? [config.roles.staff] : [] }
+    }).catch(error => console.warn("[tickets] Could not send fallback close button:", error.message));
+  }
   await i.reply({ content: t(guild.id, "Tu ticket: ", "Your ticket: ") + channel.toString(), ephemeral: true });
   await logs(guild, "Ticket abierto", i.user.tag + " abrió #" + channel.name, colors.success);
 }
