@@ -62,9 +62,11 @@ async function panel(interaction, targetId, payload, missing) {
 }
 function ticketComponents(useCustomEmoji) {
   return [new ActionRowBuilder().addComponents(
-    button("Soporte / Support", "ticket:open:support", ButtonStyle.Primary, useCustomEmoji ? "<:1541843053847904387:1553250753106288781>" : null),
-    button("Comprar / Purchase", "ticket:open:purchase", ButtonStyle.Success, useCustomEmoji ? "<:1504613328583000265:1553265743297122374>" : null),
-    button("Otros / Other", "ticket:open:other", ButtonStyle.Secondary, useCustomEmoji ? "<:discord:1549265029227085834>" : null)
+    button("Compras", "ticket:open:purchase", ButtonStyle.Success, useCustomEmoji ? "<:1504613328583000265:1553265743297122374>" : null),
+    button("Dudas", "ticket:open:questions", ButtonStyle.Primary, useCustomEmoji ? "<:discord:1549265029227085834>" : null),
+    button("Report", "ticket:open:report", ButtonStyle.Danger, useCustomEmoji ? "<:1541843053847904387:1553250753106288781>" : null),
+    button("Partner", "ticket:open:partner", ButtonStyle.Secondary, useCustomEmoji ? "🤝" : null),
+    button("Ally", "ticket:open:ally", ButtonStyle.Secondary, useCustomEmoji ? "🌐" : null)
   )];
 }
 async function openTicket(i, category) {
@@ -75,7 +77,7 @@ async function openTicket(i, category) {
   }).length;
   if (openCount >= config.limits.openTicketsPerUser) return privateReply(i, t(guild.id, "Solo puedes tener 2 tickets abiertos a la vez.", "You can have only 2 open tickets at a time."));
   const slug = i.user.username.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9-]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "").slice(0, 40) || "usuario";
-  const categoryName = { support: t(guild.id, "soporte", "support"), purchase: t(guild.id, "compra", "purchase"), other: t(guild.id, "otros", "other") }[category] || "ticket";
+  const categoryName = { purchase: "compras", questions: "dudas", report: "report", partner: "partner", ally: "ally" }[category] || "ticket";
   const overwrites = [
     { id: guild.roles.everyone.id, deny: [PermissionsBitField.Flags.ViewChannel] },
     { id: i.user.id, allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ReadMessageHistory, PermissionsBitField.Flags.AttachFiles] },
@@ -223,24 +225,23 @@ async function command(i) {
       const ticketDescription = [
         "## <:discord:1549265029227085834> WELCOME TO NEXUS MARKET SUPPORT",
         "",
-        "Welcome! Choose the ticket option that best matches your request. Our team will help you as soon as possible.",
+        "Welcome to NEXUS MARKET! Choose the option that best matches your request. Our team will assist you as soon as possible.",
         "",
-        "### ⭐ AVAILABLE TICKET TYPES",
+        "### ⭐ TICKET CATEGORIES",
         "",
-        "<:1541843053847904387:1553250753106288781> **Report Ticket** — Report issues, rule violations, or suspicious activity.",
-        "<:1504613328583000265:1553265743297122374> **Problem Report** — Get help with problems, orders, or account-related questions.",
-        "🚀 **Nitro** — Questions about Discord Nitro orders.",
-        "📺 **Streamings** — Help with streaming-service orders.",
-        "⛏️ **MFA** — Minecraft Java & Bedrock full-access products.",
-        "❓ **Other** — Anything that does not fit the categories above.",
+        "<:1504613328583000265:1553265743297122374> **Compras** — Questions about products, orders, payments, or delivery.",
+        "<:discord:1549265029227085834> **Dudas** — Need information or help before making a purchase? Open a ticket here.",
+        "<:1541843053847904387:1553250753106288781> **Report** — Report problems, suspicious activity, order issues, or rule violations.",
+        "🤝 **Partner** — Contact us to discuss partnerships and collaborations with NEXUS MARKET.",
+        "🌐 **Ally** — Request an alliance or discuss mutual promotion between communities.",
         "",
         "### 🌙 BEFORE OPENING A TICKET",
         "",
-        "➜ Select the closest matching option.",
-        "➜ Explain your request clearly and include relevant details.",
-        "➜ Never share passwords, payment-card details, or other sensitive information.",
-        "➜ Be patient and respectful while staff reviews your ticket.",
-        "➜ Duplicate tickets or misleading information may delay support.",
+        "➜ Select the category that fits your request.",
+        "➜ Describe your situation clearly and provide relevant details.",
+        "➜ Never share passwords, login codes, or sensitive payment information.",
+        "➜ Be patient and respectful while our team reviews your request.",
+        "➜ Please avoid duplicate tickets so we can help everyone faster.",
         "",
         "⭐ **Thank you for choosing NEXUS MARKET!**"
       ].join("\n");
