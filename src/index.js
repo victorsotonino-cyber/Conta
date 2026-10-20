@@ -62,9 +62,9 @@ async function panel(interaction, targetId, payload, missing) {
 }
 function ticketComponents(useCustomEmoji) {
   return [new ActionRowBuilder().addComponents(
-    button("Soporte / Support", "ticket:open:support", ButtonStyle.Primary, useCustomEmoji ? em.support : null),
-    button("Comprar / Purchase", "ticket:open:purchase", ButtonStyle.Success, useCustomEmoji ? em.bag : null),
-    button("Otros / Other", "ticket:open:other", ButtonStyle.Secondary, useCustomEmoji ? em.ticket : null)
+    button("Soporte / Support", "ticket:open:support", ButtonStyle.Primary, useCustomEmoji ? "<:1541843053847904387:1553250753106288781>" : null),
+    button("Comprar / Purchase", "ticket:open:purchase", ButtonStyle.Success, useCustomEmoji ? "<:1504613328583000265:1553265743297122374>" : null),
+    button("Otros / Other", "ticket:open:other", ButtonStyle.Secondary, useCustomEmoji ? "<:discord:1549265029227085834>" : null)
   )];
 }
 async function openTicket(i, category) {
@@ -221,30 +221,33 @@ async function command(i) {
     }
     case "ticket-panel": {
       const ticketDescription = [
-        "# WELCOME TO OUR SUPPORT SYSTEM",
-        "⠀",
-        "## ⭐ Available Ticket Types",
-        "⠀",
-        "**🚨 Report Ticket ➔ Report issues or violations**",
-        "**📌 Problem Report ➔ Problems, reports and account help**",
-        "**🚀 Nitro ➔ Discord Nitro orders**",
-        "**📺 Streamings ➔ Streaming services**",
-        "**⛏ MFA ➔ Minecraft Java & Bedrock full access**",
-        "**❓ Otros ➔ Anything else**",
+        "## <:discord:1549265029227085834> WELCOME TO NEXUS MARKET SUPPORT",
         "",
-        "## 🌙 Instructions",
-        "⠀",
-        "**➔ Select the correct ticket type**",
-        "**➔ Provide accurate information**",
-        "**➔ Wait patiently for staff**",
-        "**➔ Be respectful at all times**",
+        "Welcome! Choose the ticket option that best matches your request. Our team will help you as soon as possible.",
         "",
-        "## ⭐ Thank you for choosing NEXUS MARKET"
-      ].join("\\n");
+        "### ⭐ AVAILABLE TICKET TYPES",
+        "",
+        "<:1541843053847904387:1553250753106288781> **Report Ticket** — Report issues, rule violations, or suspicious activity.",
+        "<:1504613328583000265:1553265743297122374> **Problem Report** — Get help with problems, orders, or account-related questions.",
+        "🚀 **Nitro** — Questions about Discord Nitro orders.",
+        "📺 **Streamings** — Help with streaming-service orders.",
+        "⛏️ **MFA** — Minecraft Java & Bedrock full-access products.",
+        "❓ **Other** — Anything that does not fit the categories above.",
+        "",
+        "### 🌙 BEFORE OPENING A TICKET",
+        "",
+        "➜ Select the closest matching option.",
+        "➜ Explain your request clearly and include relevant details.",
+        "➜ Never share passwords, payment-card details, or other sensitive information.",
+        "➜ Be patient and respectful while staff reviews your ticket.",
+        "➜ Duplicate tickets or misleading information may delay support.",
+        "",
+        "⭐ **Thank you for choosing NEXUS MARKET!**"
+      ].join("\n");
       return panel(i, db.guildConfig(id).ticketPanelChannelId || "1544912257308303521", useEmoji => ({
-        embeds: [embed("NEXUS MARKET • Tickets", ticketDescription)],
+        embeds: [embed("NEXUS MARKET • Support Center", ticketDescription)],
         components: ticketComponents(useEmoji)
-      }), "No encontré el canal de tickets; configura TICKET_PANEL_CHANNEL_ID.");
+      }), "No encontré el canal de tickets; configura el canal con /ticket-channel.");
     }
     case "verify-panel":
       return panel(i, null, useEmoji => ({
