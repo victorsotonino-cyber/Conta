@@ -86,7 +86,7 @@ async function openTicket(i, category) {
   if (config.roles.staff && guild.roles.cache.has(config.roles.staff)) overwrites.push({
     id: config.roles.staff, allow: [PermissionsBitField.Flags.ViewChannel, PermissionsBitField.Flags.SendMessages, PermissionsBitField.Flags.ReadMessageHistory]
   });
-  const parent = process.env.TICKET_CATEGORY_ID;
+  const parent = process.env.TICKET_CATEGORY_ID || "1544912208675471421";
   let channel;
   try {
     channel = await guild.channels.create({
