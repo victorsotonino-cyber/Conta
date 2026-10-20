@@ -39,6 +39,15 @@ const commands = [
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
   new SlashCommandBuilder().setName("application-panel").setDescription("Publica el panel de postulaciones / Post the application panel")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild),
+  new SlashCommandBuilder().setName("ticket-channel").setDescription("Configura el canal donde se publica el panel de tickets / Set ticket panel channel")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .addChannelOption(o => o.setName("canal").setDescription("Canal para el panel de tickets / Ticket panel channel").addChannelTypes(ChannelType.GuildText).setRequired(true)),
+  new SlashCommandBuilder().setName("logs-channel").setDescription("Configura el canal de registros / Set logs channel")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .addChannelOption(o => o.setName("canal").setDescription("Canal para los registros / Logs channel").addChannelTypes(ChannelType.GuildText).setRequired(true)),
+  new SlashCommandBuilder().setName("application-channel").setDescription("Configura el canal de postulaciones / Set application channel")
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+    .addChannelOption(o => o.setName("canal").setDescription("Canal para recibir postulaciones / Application submissions channel").addChannelTypes(ChannelType.GuildText).setRequired(true)),
   new SlashCommandBuilder().setName("welcome-channel").setDescription("Configura el canal de bienvenida / Configure welcome channel")
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     .addChannelOption(o => o.setName("canal").setDescription("Canal de bienvenida / Welcome channel").addChannelTypes(ChannelType.GuildText).setRequired(true)),
