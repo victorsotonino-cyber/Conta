@@ -220,7 +220,7 @@ async function command(i) {
       return privateReply(i, "Mensajes eliminados / Messages deleted: " + deleted.size);
     }
     case "ticket-panel":
-      return panel(i, db.guildConfig(id).ticketPanelChannelId || config.channels.tickets, useEmoji => ({
+      return panel(i, db.guildConfig(id).ticketPanelChannelId || "1544912257308303521", useEmoji => ({
         embeds: [embed("NEXUS MARKET • Tickets", t(id, "Abre un ticket privado para soporte, compras u otras consultas. No compartas contraseñas ni datos sensibles.", "Open a private ticket for support, purchases or other questions. Never share passwords or sensitive data."))],
         components: ticketComponents(useEmoji)
       }), "No encontré el canal de tickets; configura TICKET_PANEL_CHANNEL_ID.");
@@ -234,6 +234,21 @@ async function command(i) {
         embeds: [embed("NEXUS MARKET • Postulaciones", t(id, "Pulsa para rellenar el formulario de postulación. El staff revisará tu solicitud.", "Press to fill out the application form. Staff will review your submission."))],
         components: [new ActionRowBuilder().addComponents(button("Postularme / Apply", "application:open", ButtonStyle.Primary, useEmoji ? em.apply : null))]
       }), "Ejecuta este comando en un canal de texto.");
+    case "ticket-channel": {
+      const ch = i.options.getChannel("canal", true);
+      db.updateGuildConfig(id, { ticketPanelChannelId: ch.id });
+      return privateReply(i, "Canal de tickets configurado / Ticket panel channel set: " + ch.toString());
+    }
+    case "logs-channel": {
+      const ch = i.options.getChannel("canal", true);
+      db.updateGuildConfig(id, { logChannelId: ch.id });
+      return privateReply(i, "Canal de registros configurado / Logs channel set: " + ch.toString());
+    }
+    case "application-channel": {
+      const ch = i.options.getChannel("canal", true);
+      db.updateGuildConfig(id, { applicationChannelId: ch.id });
+      return privateReply(i, "Canal de postulaciones configurado / Application channel set: " + ch.toString());
+    }
     case "welcome-channel": {
       const ch = i.options.getChannel("canal", true);
       db.updateGuildConfig(id, { welcomeChannelId: ch.id });
