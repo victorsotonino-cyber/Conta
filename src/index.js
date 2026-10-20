@@ -62,11 +62,11 @@ async function panel(interaction, targetId, payload, missing) {
 }
 function ticketComponents(useCustomEmoji) {
   return [new ActionRowBuilder().addComponents(
-    button("Compras", "ticket:open:purchase", ButtonStyle.Success, useCustomEmoji ? "<:1504613328583000265:1553265743297122374>" : null),
-    button("Dudas", "ticket:open:questions", ButtonStyle.Primary, useCustomEmoji ? "<:discord:1549265029227085834>" : null),
-    button("Report", "ticket:open:report", ButtonStyle.Danger, useCustomEmoji ? "<:1541843053847904387:1553250753106288781>" : null),
-    button("Partner", "ticket:open:partner", ButtonStyle.Secondary, useCustomEmoji ? "🤝" : null),
-    button("Ally", "ticket:open:ally", ButtonStyle.Secondary, useCustomEmoji ? "🌐" : null)
+    button("Compras", "ticket:open:purchase", ButtonStyle.Success, useCustomEmoji ? "<a:dinerio:1553252402675712030>" : null),
+    button("Dudas", "ticket:open:questions", ButtonStyle.Primary, useCustomEmoji ? "<:1504613328583000265:1553265743297122374>" : null),
+    button("Report", "ticket:open:report", ButtonStyle.Danger, useCustomEmoji ? "<a:alertaoo:1550990362573545632>" : null),
+    button("Partner", "ticket:open:partner", ButtonStyle.Secondary, useCustomEmoji ? "<:1500293262194245672:1553253023831163071>" : null),
+    button("Ally", "ticket:open:ally", ButtonStyle.Secondary, useCustomEmoji ? "<a:1546901668069773342:1553250735024767006>" : null)
   )];
 }
 async function openTicket(i, category) {
