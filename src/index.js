@@ -219,11 +219,33 @@ async function command(i) {
       const deleted = await i.channel.bulkDelete(amount, true);
       return privateReply(i, "Mensajes eliminados / Messages deleted: " + deleted.size);
     }
-    case "ticket-panel":
+    case "ticket-panel": {
+      const ticketDescription = [
+        "# WELCOME TO OUR SUPPORT SYSTEM",
+        "⠀",
+        "## ⭐ Available Ticket Types",
+        "⠀",
+        "**🚨 Report Ticket ➔ Report issues or violations**",
+        "**📌 Problem Report ➔ Problems, reports and account help**",
+        "**🚀 Nitro ➔ Discord Nitro orders**",
+        "**📺 Streamings ➔ Streaming services**",
+        "**⛏ MFA ➔ Minecraft Java & Bedrock full access**",
+        "**❓ Otros ➔ Anything else**",
+        "",
+        "## 🌙 Instructions",
+        "⠀",
+        "**➔ Select the correct ticket type**",
+        "**➔ Provide accurate information**",
+        "**➔ Wait patiently for staff**",
+        "**➔ Be respectful at all times**",
+        "",
+        "## ⭐ Thank you for choosing NEXUS MARKET"
+      ].join("\\n");
       return panel(i, db.guildConfig(id).ticketPanelChannelId || "1544912257308303521", useEmoji => ({
-        embeds: [embed("NEXUS MARKET • Tickets", t(id, "Abre un ticket privado para soporte, compras u otras consultas. No compartas contraseñas ni datos sensibles.", "Open a private ticket for support, purchases or other questions. Never share passwords or sensitive data."))],
+        embeds: [embed("NEXUS MARKET • Tickets", ticketDescription)],
         components: ticketComponents(useEmoji)
       }), "No encontré el canal de tickets; configura TICKET_PANEL_CHANNEL_ID.");
+    }
     case "verify-panel":
       return panel(i, null, useEmoji => ({
         embeds: [embed("NEXUS MARKET • Verificación", t(id, "Pulsa el botón para verificarte y acceder al servidor.", "Press the button to verify and access the server."))],
